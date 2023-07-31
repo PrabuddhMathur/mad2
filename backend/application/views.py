@@ -5,48 +5,32 @@ import html
 from flask import current_app as app
 import matplotlib.pyplot as plt
 import matplotlib
-import json
 
 matplotlib.use("Agg")
 
-@app.route("/")
-def home():
-    dic={"Success":200}
-    return dic
-
-@app.route("/admin_login")
-def admin_login():
-    return render_template("security/admin_login.html")
-@app.route("/user_dashboard", methods=["GET", "POST"])
-#@login_required
-def user_dashboard():
+@app.route("/api/venues")
+def venues():
     venues=venue.query.all()
+    return [venue.to_dict() for venue in venues]
+
+@app.route("/api/shows")
+def shows():
     shows=show.query.all()
+    return [show.to_dict() for show in shows]
+
+@app.route("/api/show_venues")
+def show_venues():
     show_venues=show_venue.query.all()
+    return [show_venue.to_dict() for show_venue in show_venues]
 
-    from application.database import db
+@app.route("/api/bookings")
+def booking():
+    show_bookings=bookings.query.all()
+    return [show_booking.to_dict() for show_booking in show_bookings]
 
-    available_locations=[ html.escape(i[0],quote=True) for i in db.session.query(venue.venue_location.distinct()).all()]
-    available_genres=[ html.escape(i[0],quote=True) for i in db.session.query(show.show_tags.distinct()).all()]
-    available_timings=[ html.escape(i[0],quote=True) for i in db.session.query(show.show_timing.distinct()).all()]
-    available_shows=[ html.escape(i[0],quote=True) for i in db.session.query(show.show_name.distinct()).all()]
-
-    search_by_category=['Show','Venue','Location','Timing','Genre','Rating' ]
-
-    return render_template("user_dashboard.html",venues=venues,shows=shows, user=current_user, show_venues=show_venues,search_by_category=search_by_category,available_locations=available_locations,available_genres=available_genres,available_timings=available_timings,available_shows=available_shows)
-
-@app.route("/user_dashboard/shows", methods=["GET"])
-#@login_required
-def all_shows():
-    venues=venue.query.all()
-    shows=show.query.all()
-    show_venues=show_venue.query.all()
-
-    return [[venue.to_dict() for venue in venues],[show.to_dict() for show in shows ],[show_venue.to_dict() for show_venue in show_venues]]
 
 
 @app.route('/user_dashboard/search', methods=["GET"])
-#@login_required
 def search():
     venues=venue.query.all()
     shows=show.query.all()
@@ -78,35 +62,9 @@ def search():
         results=show.query.filter(show.show_rating.like(query)).all()
     
     return render_template('search.html', venues=venues, shows=shows, show_venues=show_venues,search_by_category=search_by_category,search_value=search_value,search_query=search_query,available_locations=available_locations,available_genres=available_genres,available_timings=available_timings,available_shows=available_shows,available_venues=available_venues,results=results)
-    
-@app.route("/user_bookings", methods=["GET"])
-#@login_required
-def user_bookings():
-    venues=venue.query.all()
-    shows=show.query.all()
-    show_venues=show_venue.query.all()
-    show_bookings=bookings.query.all()
 
-    return [[venue.to_dict() for venue in venues],[show.to_dict() for show in shows ],[show_venue.to_dict() for show_venue in show_venues],[show_booking.to_dict() for show_booking in show_bookings]]
-
-@app.route("/admin_dashboard", methods=["GET", "POST"])
-#@login_required
-#@roles_required('admin')
-def admin_dashboard():
-    venues=venue.query.all()
-    shows=show.query.all()
-    show_venues=show_venue.query.all()
-
-    genres = ['Action', 'Comedy', 'Drama', 'Horror','Mythology', 'Romance', 'Science Fiction', 'Thriller', 'Fantasy', 'Animation', 'Adventure']
-    locations = ['Ahmedabad', 'Bangalore', 'Chennai', 'Delhi', 'Hyderabad', 'Jaipur', 'Kanpur', 'Kolkata', 'Lucknow', 'Mumbai', 'Nagpur', 'Patna', 'Pune', 'Surat', 'Thane', 'Vadodara', 'Varanasi', 'Bhopal', 'Coimbatore', 'Visakhapatnam']
-    timings=['9AM - 12PM','12PM - 3PM','3PM - 6PM','6PM - 9PM','9PM - 12AM']
-
-
-    return [[venue.to_dict() for venue in venues],[show.to_dict() for show in shows ],[show_venue.to_dict() for show_venue in show_venues]]
 
 @app.route("/admin_summary", methods=["GET", "POST"])
-#@login_required
-#@roles_required('admin')
 def admin_summary():
     show_venues=show_venue.query.all()
     x=[]

@@ -1,7 +1,6 @@
 from flask import Flask
 from application.config import LocalDevelopmentConfig
 from application.database import db
-from flask_security import SQLAlchemySessionUserDatastore,Security
 from application.models import *
 from flask_cors import CORS
 
@@ -17,9 +16,6 @@ def create_app():
     app.app_context().push()
     
     db.create_all()
-
-    user_datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
-    # security = Security(app, user_datastore)
     app.app_context().push()
 
     return app

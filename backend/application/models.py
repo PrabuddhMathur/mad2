@@ -1,26 +1,12 @@
 from .database import *
-from flask_security import UserMixin, RoleMixin
 
-
-roles_users = db.Table('roles_users',
-        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))    
-
-class User(db.Model, UserMixin):
+class User(db.Model):
     __tablename__='user'
     id=db.Column(db.Integer, autoincrement=True, primary_key=True)
     email=db.Column(db.String, unique=True)
     username=db.Column(db.String)
     password=db.Column(db.String(255))
-    active=db.Column(db.Boolean())
-    roles=db.relationship('Role', secondary="roles_users")
-    fs_uniquifier = db.Column(db.String, unique=True, nullable=False)
-
-class Role(db.Model, RoleMixin):
-    __tablename__='role'
-    id=db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name=db.Column(db.String(80), unique=True)
-    description = db.Column(db.String(255))
+    isadmin=db.Column(db.Boolean,nullable=False,default=False)
 
 class venue(db.Model):
     __tablename__='venue'
@@ -32,13 +18,19 @@ class venue(db.Model):
     venue_show=db.relationship("show", secondary="show_venue", backref="show_venue")
     
     def to_dict(self):
+        venue_show=[i.to_dict() for i in self.venue_show]
+        tickets = [i.to_dict()["available_tickets"] for j in [k.to_dict() for k in self.venue_show] for i in show_venue.query.filter_by(venue_id=self.venue_id, show_id=j["show_id"]).all()]
+        v = []
+        for i, show in enumerate(venue_show):
+            show["available_tickets"] = tickets[i]
+            v.append(show)
         return {
             "venue_id":self.venue_id,
             "venue_name":self.venue_name,
             "venue_place":self.venue_place,
             "venue_location":self.venue_location,
             "venue_capacity":self.venue_capacity,
-            # "venue_show":self.venue_show
+             "venue_show": v
         }
 
 class show(db.Model):
@@ -58,6 +50,7 @@ class show(db.Model):
             "show_rating":self.show_rating,
             "show_tags":self.show_tags,
             "show_ticketprice":self.show_ticketprice
+
         }
 
 class bookings(db.Model):
