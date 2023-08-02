@@ -7,8 +7,6 @@
 			/>
 		</div>
 	</div>
-
-	<!-- <div>{{ this.getVenues }}</div> -->
 	
 </template>
 <script>

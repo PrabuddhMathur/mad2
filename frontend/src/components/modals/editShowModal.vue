@@ -6,7 +6,6 @@
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Details</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form :action="'/edit/show/'+shows.show_id" method="POST">
                 <div class="modal-body">
                     <div class="row justify-content-center text-center">
                     <div class="row my-3">
@@ -48,14 +47,14 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-success">Save Edits</button>
-                    <a  :href="'/delete/show/'+ shows.show_id " type="button" class="btn btn-danger" id="venue_btn">Delete</a>
+                    <a  type="button" class="btn btn-danger" id="venue_btn"  @click="deleteShow">Delete</a>
                 </div>
-            </form>
             </div>
         </div>
     </div>
 </template>
 <script>
+import axios from 'axios';
     export default {
         props:{
             shows: {
@@ -67,5 +66,22 @@
                 required: true
             }
         },
+        data(){
+            return {
+                show_id:this.shows.show_id
+            }
+        },
+        methods:{
+            async editShow(){
+                await axios
+                    .put("http://127.0.0.1:8090/api/show"+this.show_id)
+            },
+            async deleteShow(){
+                await axios
+                    .delete("http://127.0.0.1:8090/api/show/"+this.show_id)
+                    this.$router.go(0);
+
+            }
+        }
     }
 </script>

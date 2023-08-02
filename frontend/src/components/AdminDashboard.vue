@@ -73,7 +73,7 @@
 							<div class="card-footer">
 								<div class="row justify-content-center">
 									<button class="col-3 btn btn-success m-2" data-bs-toggle="modal" :data-bs-target="'#'+venue.venue_id+'edit_venue'">Edit Venue</button>
-									<a  href="/delete/venue/{{ venue.venue_id }}" type="button" class="col-3 btn btn-danger m-2" id="venue_btn">Delete Venue</a>
+									<a type="button" class="col-3 btn btn-danger m-2" id="venue_btn" @click="deleteVenue(venue.venue_id)">Delete Venue</a>
 									<editVenueModal :venues=venue />
 								</div>
 
@@ -93,10 +93,10 @@
 import createVenueModal from "@/components/modals/createVenueModal.vue";
 import createShowModal from "@/components/modals/createShowModal.vue";
 import editVenueModal from "@/components/modals/editVenueModal.vue";
-import editShowModal from "@/components/modals/editShowModal.vue"
-
+import editShowModal from "@/components/modals/editShowModal.vue";
+import axios from "axios";
     export default {
-		components: {createShowModal,createVenueModal, editVenueModal ,editShowModal},
+		components: {createShowModal, createVenueModal, editVenueModal ,editShowModal},
         name: "adminDashboardComp",
         props:{
             venues: {
@@ -104,18 +104,19 @@ import editShowModal from "@/components/modals/editShowModal.vue"
                 required: true
             }
         },
-		// data() {
-		// 	return {
-		// 	shouldRenderComponent: false,
-		// 	};
-		// },
         computed:{
             getVenues(){
                 return this.venues
             }
         },
-		// mounted(){
-		// 	this.shouldRenderComponent = true;
-		// }
+        methods:{
+            async deleteVenue(venue_id){
+                await axios
+                    .delete("http://127.0.0.1:8090/api/venue/"+venue_id)
+                    .then((response)=>response)
+                    .then((response)=>console.log(response.data))
+                    this.$router.go(0);
+            }
+        }
     }
 </script>

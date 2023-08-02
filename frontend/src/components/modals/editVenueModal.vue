@@ -6,7 +6,6 @@
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Venue</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form :action="'/edit/venue'+venues.venue_id" method="POST">
                     <div class="modal-body">
                         <div class="row justify-content-center text-center">
                             <div class="row m-1">
@@ -37,9 +36,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Save Edits</button>
+                        <button type="submit" class="btn btn-success" @onclick="editVenue(venues.venue_id)">Save Edits</button>
                     </div>
-                </form>
             </div>
         </div>
 	</div>
@@ -52,5 +50,25 @@
                 required: true
             }
         },
+        data(){
+            return {
+            venue_name:"",
+            venue_place:"",
+            venue_location:"",
+            venue_capacity:""
+            }
+        },
+        methods:{
+            async editVenue(venue_id){
+                await axios
+                    .put("http://127.0.0.1:8090/api/venue/"+venue_id,{
+                        venue_name:this.venue_name,
+                        venue_place:this.venue_place,
+                        venue_location:this.venue_location,
+                        venue_capacity:this.venue_capacity
+                        })
+                        location.href="/admin_dashboard"
+            },
+        }
     }
 </script>
