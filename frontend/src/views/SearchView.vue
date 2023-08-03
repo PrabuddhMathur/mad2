@@ -12,9 +12,7 @@
 				<div class="col-2">
 					<select class="form-control border border-success border-2" id="search_by" onchange="changeQuery();"  required>
 						<option class="text-center" disabled selected value="">-- Search by --</option>
-						{% for i in search_by_category %}
-							<option class="text-center" value="{{i}}">Search by {{i}}</option>
-						{% endfor %}
+							<option class="text-center" v-for="i in search_by_category" :key="i" :value=i>Search by {{i}}</option>
 					</select>
 				</div>
 
@@ -32,3 +30,12 @@
 	</div>
 </div>
 </template>
+<script>
+	export default{
+		data(){
+			return {
+				search_by_category: ['Show','Venue','Location','Timing', 'Genre','Rating' ]
+			}
+		}
+	}
+</script>

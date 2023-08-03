@@ -35,6 +35,7 @@ def userLogin():
     data=request.get_json()
     (email,password) = (data.get("email"),data.get("password"))
     current_user=User.query.filter_by(email=email).first()
+    
     if not current_user:
         return {"Error" : 404, "errorMessage": "User not found"}
     if not passhash.verify(password,current_user.password):
@@ -45,6 +46,16 @@ def userLogin():
     expiry_time = datetime.datetime.utcnow() + datetime.timedelta(days=30)
     return {"token": encoded_token, "expiry": expiry_time}
 
+@app.route("/api/isadmin")
+def isAdmin():
+    token=request.headers.get("Authorization", "").split(" ")[-1]
+
+    decodedToken=jwt.decode(token,app.secret_key,algorithms=["HS256"])
+
+    token=Token.query.filter_by(token=decodedToken['token']).first()
+    isAdmin=User.query.filter_by(id=token.user_id).first().isadmin
+    return [isAdmin]
+    
 @app.route("/api/venues", methods=["GET","POST"])
 def allVenues():
     if request.method=="GET":

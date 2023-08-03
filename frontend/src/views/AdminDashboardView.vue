@@ -12,11 +12,13 @@
 <script>
 import AdminDashboardComp from "@/components/AdminDashboard.vue";
 import axios from "axios";
+import { resolveDynamicComponent } from 'vue';
 export default {
 	name: 'adminDashboardView',
 	components: {AdminDashboardComp},
     data() {
         return {
+			userSession: JSON.parse(localStorage.getItem("userSession")) || null,
             venues: null,
         }
     },
@@ -34,8 +36,30 @@ export default {
                     console.error("MFing Venue error: ", error)
                 });
 				this.$forceUpdate();
+			},
+			async isAdmin(){
+				if (this.userSession){
+
+					axios.defaults.headers.common[
+				"Authorization"
+				] = `Bearer ${this.userSession.token}`;
+
+				await axios
+					.get('http://127.0.0.1:8090/api/isadmin')
+					.then((response)=>response)
+					.then((response)=>response.data)
+					.then((response)=>{
+						
+						var bool = response[0]
+						if (! bool){
+							location.href="/"
+						}
+					})
+				}
+				else{
+					location.href="/"
+				}
 			}
-			
     },
     computed: {
 		getVenues(){
@@ -51,6 +75,7 @@ export default {
 	},
 	async beforeMount() {
 		this.fetchVenues();
+		this.isAdmin();
 	},
 	mounted() {
 		document.title = "Admin Dashboard";

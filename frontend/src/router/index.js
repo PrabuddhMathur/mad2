@@ -4,6 +4,7 @@ import RegisterView from '../views/RegisterView.vue'
 import SearchView from '../views/SearchView.vue'
 import AdminDashboardView from '../views/AdminDashboardView.vue'
 import ShowsView from '../views/ShowsView.vue'
+import UserBookingsView from '../views/UserBookingsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,7 +34,8 @@ const router = createRouter({
     },
     {
       path: '/bookings',
-      name: 'bookings'
+      name: 'bookings',
+      component: UserBookingsView,
     },
     {
       path: '/summary',

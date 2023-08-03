@@ -41,6 +41,20 @@
                         >Search 
                     </router-link>
                 </li>
+                <li class="nav-item p-2">
+                    <router-link
+                        class="btn btn-success nav-item"
+                        :to="bookings"
+                        >Bookings
+                    </router-link>
+                </li>
+                <li class="nav-item p-2">
+                    <button
+                        class="btn btn-success nav-item"
+                        @click="logOut"
+                        >Logout
+                    </button>
+                </li>
 				<!-- <li class="nav-item p-2"><a class="nav-item btn btn-success" href="{{ url_for('user_bookings') }}">Bookings</a></li> -->
 				<!-- <li class="nav-item p-2"><a class="nav-item btn btn-success" href="#">Logout</a></li> -->
 			</ul>
@@ -53,6 +67,20 @@
 <script>
 export default {
     name: "Navbar",
+    data(){
+        return{
+            userSession: JSON.parse(localStorage.getItem("userSession")) || null,
+        }
+    },
+    methods:{
+        async logOut(){
+            if(this.userSession != null){
+                localStorage.removeItem("userSession")
+                location.href="/login"
+            }
+            else{console.log("Ducking user not logged in.")}
+        }
+    },
     computed: {
         login() {
             return "/login"
@@ -68,6 +96,9 @@ export default {
         },
         search (){
             return "/search"
+        },
+        bookings(){
+            return "/bookings"
         }
     },
 }

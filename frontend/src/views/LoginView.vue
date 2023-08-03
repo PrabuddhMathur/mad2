@@ -16,7 +16,7 @@
 						
 						<div class="row justify-content-center text-center">
 							<div class="col"><button class="btn btn-success" type="submit" @click="logIn">Login</button></div>
-							<div class="col"><button  class="btn btn-primary" type="button">Register</button></div>
+							<div class="col"><router-link class="btn btn-primary" type="button" :to="register">Register</router-link></div>
 						</div>
 					</div>
 				</div>
@@ -43,19 +43,24 @@ export default {
 					email:this.email,
 					password:this.password
 				})
-				.then((response)=>response["data"])
-				.then((response)=>{return response;})
+				.then((response)=>response)
+				.then((response)=>response.data)
 				.then((response) => (
-				(this.token = response.token), (this.expiry = response.exp)
+				(this.token = response.token), (this.expiry = response.expiry)
 				))
 				this.userSession = {
 				token: this.token,
 				expiry: this.expiry,
 				};
+				console.log(this.userSession)
 				localStorage.setItem("userSession", JSON.stringify(this.userSession));
 				location.href="/admin_dashboard"
 		}
+	},
+	computed:{
+	register() {
+            return "/register"
+        },
 	}
 }
-
 </script>
