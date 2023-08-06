@@ -7,7 +7,7 @@
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Show</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                
+                <form @submit.prevent="addShow">
                     <div class="modal-body">
                         <div class="row justify-content-center text-center">
                             <div class="row my-3">
@@ -21,23 +21,14 @@
                                 <label class="form-label col-4" for="timing">Timing</label>
                                 <select class="col-6" name="show_timing" id="timing" v-model="show_timing" required>
                                     <option value="" disabled selected>-- Select Timing --</option>
-                                    <option value="9-12">9-12</option>
-                                    <option value="12-3">12-3</option>
-                                    
-                                    <!-- <option value="{{ timing }}">{{ timing }}</option> -->
-                                    
+                                    <option v-for="timing in timings" :key="timing" :value=timing>{{ timing }}</option>                                    
                                 </select>
                             </div>
                             <div class="row m-1">
                                 <label class="form-label col-4" for="genre">Genre</label>
                                 <select class="col-6" name="show_tags" id="genre" v-model="show_tags" required>
                                     <option value="" disabled selected>-- Select Genre --</option>
-                                    <option value="Action">Action</option>
-                                    <option value="Comedy">Comedy</option>
-                                    <option value="Mythology">Mythology</option>
-                                    
-                                    <!-- <option value="{{ genre }}">{{ genre }}</option> -->
-                                   
+                                    <option v-for="genre in genres" :key="genre" :value=genre>{{ genre }}</option>
                                 </select>
                             </div>
                             <div class="row m-1">
@@ -53,9 +44,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success" @click="addShow">Add</button>
+                        <button type="submit" class="btn btn-success">Add</button>
                     </div>
-               
+                </form>
             </div>
         </div>
 	</div>
@@ -76,8 +67,10 @@ import axios from 'axios';
             show_timing:"",
             show_tags:"",
             show_ticketprice:"",
-            available_tickets:""
-        }
+            available_tickets:"",
+            genres:['Action', 'Comedy', 'Drama', 'Horror','Mythology', 'Romance', 'Science Fiction', 'Thriller', 'Fantasy', 'Animation', 'Adventure'],
+            timings:['9AM - 12PM','12PM - 3PM','3PM - 6PM','6PM - 9PM','9PM - 12AM']
+            }
         },
         methods:{
             async addShow(){

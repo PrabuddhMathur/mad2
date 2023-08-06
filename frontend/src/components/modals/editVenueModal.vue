@@ -55,7 +55,8 @@
             venue_name:"",
             venue_place:"",
             venue_location:"",
-            venue_capacity:""
+            venue_capacity:"",
+            
             }
         },
         methods:{

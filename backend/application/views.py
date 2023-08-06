@@ -3,7 +3,8 @@ from .models import *
 from flask import current_app as app
 from passlib.hash import pbkdf2_sha256 as passhash
 import jwt, secrets,datetime
-# from application.cache import cache
+from application.cache import cache
+from application.data_access import *
 # import matplotlib
 # import matplotlib.pyplot as plt
 
@@ -34,14 +35,14 @@ def userRegister():
 def userLogin():
     data=request.get_json()
     (email,password) = (data.get("email"),data.get("password"))
-    current_user=User.query.filter_by(email=email).first()
+    current_user=get_user_by_email(email)
     
     if not current_user:
         return {"Error" : 404, "errorMessage": "User not found"}
     if not passhash.verify(password,current_user.password):
         return {"Error" : 401, "errorMessage": "Invalid Password"}
     
-    token=Token.query.filter_by(user_id=current_user.id).first().token
+    token=get_token_by_user_id(current_user.id)
     encoded_token = jwt.encode({"token": token}, app.secret_key)
     expiry_time = datetime.datetime.utcnow() + datetime.timedelta(days=30)
     return {"token": encoded_token, "expiry": expiry_time}
@@ -52,16 +53,16 @@ def isAdmin():
 
     decodedToken=jwt.decode(token,app.secret_key,algorithms=["HS256"])
 
-    token=Token.query.filter_by(token=decodedToken['token']).first()
-    isAdmin=User.query.filter_by(id=token.user_id).first().isadmin
+    user_id=get_user_id_by_token(decodedToken['token'])
+    isAdmin=User.query.filter_by(id=user_id).first().isadmin
     return [isAdmin]
     
 @app.route("/api/venues", methods=["GET","POST"])
 def allVenues():
     if request.method=="GET":
-        venues=Venues.query.all()
-        return [venue.to_dict() for venue in venues]
-    
+        venues=get_all_venues()
+        return venues
+
     if request.method=="POST":
         data=request.get_json()
         venue_name=data.get("venue_name")
@@ -77,7 +78,7 @@ def allVenues():
 @app.route("/api/venue/<int:venue_id>",methods=["PUT","PATCH","DELETE"])
 def theVenues(venue_id):
     if request.method=="DELETE":
-        the_venue=Venues.query.filter_by(venue_id=venue_id).first()
+        the_venue=get_venue_by_id(venue_id)
         db.session.delete(the_venue)
         db.session.commit()
         return "FUCKING VENUE DELETED"
@@ -85,7 +86,7 @@ def theVenues(venue_id):
 @app.route("/api/shows",methods=["GET","POST"])
 def allShows():
     if request.method=="GET":
-        shows=Shows.query.all()
+        shows=get_all_shows()
         return [show.to_dict() for show in shows]
     
     if request.method=="POST":
@@ -112,20 +113,54 @@ def allShows():
 def theShows(show_id):
     if request.method=="DELETE":
         
-        the_show=Shows.query.filter_by(show_id=show_id).first()
+        the_show=get_show_by_id(show_id)
         db.session.delete(the_show)
         db.session.commit()
         return "FUCKING DELETED"
 
-@app.route("/api/bookings/<int:show_id>", methods=["POST","PUT","DELETE"])
-def booking(show_id):
-    if request.method=="POST":
-        data=request.get_json()
-        booking_tickets=data.get("tickets")
+@app.route("/api/bookings", methods=["GET","POST","PUT","DELETE"])
+def bookings():
+    if request.method=="GET":
+        token=request.headers.get("Authorization", "").split(" ")[-1]
+        
+        decodedToken=jwt.decode(token,app.secret_key,algorithms=["HS256"])
+        
+        user_id=get_user_id_by_token(decodedToken['token'])
+        
+        bookings=get_user_bookings(user_id)
 
-        # new_booking=Bookings(booking_tickets=booking_tickets, user_id=current_user.id, show_id=show_id)
-        return 'data'
+        return [booking.to_dict() for booking in bookings]
+
+
+    # if request.method=="POST":
+    #     data=request.get_json()
+    #     booking_tickets=data.get("tickets")
+
+    #     # new_booking=Bookings(booking_tickets=booking_tickets, user_id=current_user.id, show_id=show_id)
+    #     return 'data'
     
+@app.route("/api/search",methods=["POST"])
+def search():
+    data=request.get_json()
+    search_category=data.get("category")
+    search_query=data.get("query")
+    query="%"+search_query+"%"
+
+    if search_category=="Show":
+        results=Shows.query.filter(Shows.show_name.like(query)).all()
+    elif search_category=="Venue":
+        results=Venues.query.filter(Venues.venue_name.like(query)).all()
+    elif search_category=="Location":
+        results=Venues.query.filter(Venues.venue_location.like(query)).all()
+    elif search_category=="Timing":
+        results=Shows.query.filter(Shows.show_timing.like(query)).all()
+    elif search_category=="Genre":
+        results=Shows.query.filter(Shows.show_tags.like(query)).all()
+    elif search_category=="Rating":
+        results=Shows.query.filter(Shows.show_rating.like(query)).all()
+    
+    return [i.to_dict() for i in results]
+
 
 # @app.route('/user_dashboard/search', methods=["GET"])
 # def search():

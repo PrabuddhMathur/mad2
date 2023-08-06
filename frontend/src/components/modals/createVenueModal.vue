@@ -14,26 +14,22 @@
               </div>
               <div class="row m-1">
                   <label class="form-label col-4 align-self-center">Venue Name</label>
-                  <input class="col-5" type="text" name="venue" v-model="venue_name" required>
+                  <input class="col-5" type="text" name="venue" v-model.trim="venue_name" required>
               </div>
               <div class="row m-1">
                   <label class="form-label col-4" for="">Place</label>
-                  <input class="col-5" type="text" name="place" v-model="venue_place" required>
+                  <input class="col-5" type="text" name="place" v-model.trim="venue_place" required>
               </div>
               <div class="row m-1">
                   <label class="form-label col-4" for="location">Location</label>
-                  <select class='col-5' name="location" id="location" v-model="venue_location" required>
+                  <select class='col-5' name="location" id="location" v-model.trim="venue_location" required>
                     <option value="" selected>-- Select Location --</option>
-                    <option value="Chennai">Chennai</option>
-                    <option value="Ahmedabad">Ahmedabad</option>
-                    <!-- {% for location in locations %} -->
-                    <!-- <option value="{{ location }}">{{ location }}</option> -->
-                    <!-- {% endfor %} -->
+                    <option v-for="location in locations" :key="location" :value=location>{{ location }}</option>
                   </select>
               </div>
               <div class="row m-1">
                   <label class="form-label col-4" for="">Capacity</label>
-                  <input class="col-5" min="0" type="number" name="capacity" v-model="venue_capacity" required>
+                  <input class="col-5" min="0" type="number" name="capacity" v-model.trim="venue_capacity" required>
               </div>
           </div>
         </div>
@@ -54,7 +50,8 @@ export default{
       venue_name:"",
       venue_place:"",
       venue_location:"",
-      venue_capacity:""
+      venue_capacity:"",
+      locations:['Ahmedabad', 'Bangalore', 'Chennai', 'Delhi', 'Hyderabad', 'Jaipur', 'Kanpur', 'Kolkata', 'Lucknow', 'Mumbai', 'Nagpur', 'Patna', 'Pune', 'Surat', 'Thane', 'Vadodara', 'Varanasi', 'Bhopal', 'Coimbatore', 'Visakhapatnam']
     }
   },
   methods:{

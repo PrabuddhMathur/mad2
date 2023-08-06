@@ -12,7 +12,6 @@
 <script>
 import AdminDashboardComp from "@/components/AdminDashboard.vue";
 import axios from "axios";
-import { resolveDynamicComponent } from 'vue';
 export default {
 	name: 'adminDashboardView',
 	components: {AdminDashboardComp},
@@ -40,9 +39,7 @@ export default {
 			async isAdmin(){
 				if (this.userSession){
 
-					axios.defaults.headers.common[
-				"Authorization"
-				] = `Bearer ${this.userSession.token}`;
+					axios.defaults.headers.common["Authorization"] = `Bearer ${this.userSession.token}`;
 
 				await axios
 					.get('http://127.0.0.1:8090/api/isadmin')
