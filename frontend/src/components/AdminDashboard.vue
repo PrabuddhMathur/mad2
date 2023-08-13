@@ -16,8 +16,9 @@
 						<div class="card m-2 p-0">
 							<div class="card-header" style="background-color: #BBE38F">
 								<div class="row">
-									<h5 class="col-10 card-title align-self-center">{{ venue.venue_name }}</h5>
-									<button class="col-2 btn btn-success" data-bs-toggle="modal"  :data-bs-target="'#'+venue.venue_id + 'create_show'">Add Show</button>
+									<h5 class="col-8 card-title align-self-center">{{ venue.venue_name }}</h5>
+									<button class="col-2 mx-1 btn btn-success" @click="exportVenue(venue.venue_id)">Export Venue Details</button>
+									<button class="col-1 mx-1 btn btn-success" data-bs-toggle="modal"  :data-bs-target="'#'+venue.venue_id + 'create_show'">Add Show</button>
 									<createShowModal
 									:venues=venue
 									/>
@@ -118,6 +119,13 @@ import axios from "axios";
                     .then((response)=>console.log(response.data))
                     this.$router.go(0);
             },
+			async exportVenue(venue_id){
+				await axios
+					.get("http://127.0.0.1:8090/api/export/"+venue_id)
+					.then((response)=>response)
+					.then((response)=>response.data)
+					.then((response)=>{alert(response)})
+			}
 			
     }
 }

@@ -27,12 +27,6 @@ def get_status(user_id):
     return visited
 
 @cache.memoize()
-def get_status_users():
-    status=Visited.query.filter_by(status=False).all()
-    users=[get_user_by_id(i.user_id) for i in status]
-    return users
-
-@cache.memoize()
 def get_user_bookings(user_id):
     bookings=Bookings.query.filter_by(user_id=user_id).all()
     return bookings

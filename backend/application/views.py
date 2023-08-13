@@ -26,6 +26,10 @@ def userRegister():
     db.session.add(token)
     db.session.commit()
 
+    visit=Visited(user_id=new_user.id, status=True)
+    db.session.add(visit)
+    db.session.commit()
+
     cache.clear()
     token=token.token
     encoded = jwt.encode({"token": token}, app.secret_key)
@@ -46,8 +50,11 @@ def userLogin():
     token=get_token_by_user_id(current_user.id)
     encoded_token = jwt.encode({"token": token}, app.secret_key)
     expiry_time = datetime.datetime.utcnow() + datetime.timedelta(days=30)
-    get_status(current_user.user_id).status=True
+
+    get_status(current_user.id).status=True
     db.session.commit()
+
+
     return {"token": encoded_token, "expiry": expiry_time}
 
 @app.route("/api/isadmin")
@@ -345,3 +352,12 @@ def summary():
     plt.clf()
 
     return "Admin Summary Created"
+
+@app.route("/api/export/<int:venue_id>")
+def export(venue_id):
+    token=request.headers.get("Authorization", "").split(" ")[-1]
+    decodedToken=jwt.decode(token,app.secret_key,algorithms=["HS256"])
+    user_id=get_user_id_by_token(decodedToken['token'])
+
+    tasks.export_venue_csv.delay(venue_id,user_id)
+    return "Venue details successfully exported and sent via mail."
