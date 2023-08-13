@@ -18,6 +18,8 @@ def userRegister():
     email=data.get("email")
     password=data.get("password")
 
+    if get_user_by_email(email):
+        return {"Error" : 401, "errorMessage": "Email already exists."}
     new_user=User(email=email,username=username,password=passhash.hash(password))
     db.session.add(new_user)
     db.session.commit()
@@ -52,6 +54,7 @@ def userLogin():
     expiry_time = datetime.datetime.utcnow() + datetime.timedelta(days=30)
 
     get_status(current_user.id).status=True
+    
     db.session.commit()
 
 

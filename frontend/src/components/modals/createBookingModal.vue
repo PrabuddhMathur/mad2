@@ -29,7 +29,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success">Book</button>
+                    <button v-if="loggedin" type="submit" class="btn btn-success">Book</button>
+                    <button v-else class="btn btn-secondary" disabled>Not Logged In</button>
                 </div>
             </form>
         </div>
@@ -48,10 +49,14 @@ import axios from 'axios';
         data(){
             return {
                 userSession: JSON.parse(localStorage.getItem("userSession")) || null,
-                tickets : ""
+                tickets : "",
+                loggedin:false
             }
         },
         methods:{
+            async isLoggedin(){
+            if(this.userSession != null){this.loggedin=true}
+        },
             async createBooking(){
                 if (this.userSession){
 					axios.defaults.headers.common["Authorization"] = `Bearer ${this.userSession.token}`;
@@ -64,6 +69,9 @@ import axios from 'axios';
                     location.href="/bookings"
             }
         }
+    },
+    async beforeMount(){
+        this.isLoggedin();
     }
 }
 </script>

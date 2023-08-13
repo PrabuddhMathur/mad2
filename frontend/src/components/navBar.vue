@@ -94,7 +94,7 @@ export default {
                 localStorage.removeItem("userSession")
                 location.href="/login"
             }
-            else{console.log("Ducking user not logged in.")}
+            else{console.log("User not logged in.")}
         },
         async getUsername(){
             if (this.userSession){

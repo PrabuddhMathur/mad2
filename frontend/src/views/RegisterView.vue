@@ -57,17 +57,28 @@ export default {
 						username: this.username,
 						password: this.password
 					})
-					.then((response) => response["data"])
-					.then((response)=>{return response;})
-					.then((response) => (
-					(this.token = response.token), (this.expiry = response.exp)
-					))
+					.then((response) => response.data)
+					.then((response)=>{
+						if ("Error" in response){
+							throw response
+						}
+						else{return response}
+					})
+					.then((response) => {
+					this.token = response.token
+					this.expiry = response.expiry
 					this.userSession = {
 					token: this.token,
 					expiry: this.expiry,
 					};
+					console.log(this.userSession)
 					localStorage.setItem("userSession", JSON.stringify(this.userSession));
-					location.href="/admin_dashboard"
+					location.href="/shows"
+					
+					})
+					.catch((response)=>{
+						alert(response['errorMessage'])
+					})
 					
 			}
 		}

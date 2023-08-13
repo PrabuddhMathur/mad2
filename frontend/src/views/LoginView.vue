@@ -47,9 +47,15 @@ export default {
 				})
 				.then((response)=>response)
 				.then((response)=>response.data)
-				.then((response) => (
-				(this.token = response.token), (this.expiry = response.expiry)
-				))
+				.then((response)=>{
+					if ("Error" in response){
+						throw response
+					}
+					else{return response}
+				})
+				.then((response) => {
+				this.token = response.token
+				this.expiry = response.expiry
 				this.userSession = {
 				token: this.token,
 				expiry: this.expiry,
@@ -57,6 +63,13 @@ export default {
 				console.log(this.userSession)
 				localStorage.setItem("userSession", JSON.stringify(this.userSession));
 				location.href="/shows"
+				
+				})
+				.catch((response)=>{
+					alert(response['errorMessage'])
+				})
+				
+				
 		}
 	},
 	computed:{

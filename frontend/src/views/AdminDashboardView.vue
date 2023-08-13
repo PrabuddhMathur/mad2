@@ -32,7 +32,7 @@ export default {
 
                 })
                 .catch(()=>{
-                    console.error("MFing Venue error: ", error)
+                    console.error("Venue error: ", error)
                 });
 				this.$forceUpdate();
 			},
@@ -48,12 +48,12 @@ export default {
 						
 						var bool = response[0]
 						if (! bool){
-							location.href="/"
+							location.href="/shows"
 						}
 					})
 				}
 				else{
-					location.href="/"
+					location.href="/login"
 				}
 			}
     },

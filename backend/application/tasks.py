@@ -17,6 +17,7 @@ def setup_periodic_tasks(sender, **kwargs):
     )
     sender.add_periodic_task(
         crontab(hour=7),
+
         send_daily_reminders.s(),
         name="Daily Reminder"
     )
@@ -145,6 +146,7 @@ def send_daily_reminders():
         </p>
         """
     users=Visited.query.all()
+    print(users)
     for user in users:
         if user.user_id!=1:
             if not user.status:
@@ -154,7 +156,5 @@ def send_daily_reminders():
                 message = template.render(username=get_user_by_id(user.user_id).username)
 
                 send_email(address,subject,message)
-
-            else:
-                user.status=False
-                db.session.commit()
+            user.status=False
+            db.session.commit()

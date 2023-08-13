@@ -104,7 +104,7 @@ export default{
 
             })
             .catch(()=>{
-                console.error("MFing Show error: ", error)
+                console.error("Show error: ", error)
             });
             this.$forceUpdate();
         },
@@ -118,7 +118,7 @@ export default{
 
             })
             .catch(()=>{
-                console.error("MFing Venue error: ", error)
+                console.error("Venue error: ", error)
             });
             this.$forceUpdate();
         },
@@ -131,7 +131,6 @@ export default{
                 .then((response)=>response)
                 .then((response)=>response.data)
                 .then((results)=>{
-                    // console.log(results)
                     this.results=results;
                 })
 				this.state=true
