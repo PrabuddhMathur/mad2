@@ -1,5 +1,5 @@
 <template>
-    <UserBookings 
+    <UserBookings v-if="bookings!=''"
     :bookings=this.bookings
     />    
 </template>

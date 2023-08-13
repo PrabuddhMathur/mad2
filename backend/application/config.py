@@ -1,4 +1,5 @@
 import os
+from zoneinfo import ZoneInfo
 basedir=os.path.abspath(os.path.dirname(__file__))
 
 SECRET_KEY="lachimolala"
@@ -12,6 +13,7 @@ class Config():
     CACHE_DEFAULT_TIMEOUT= 300
     CELERY_BROKER_URL = "redis://localhost:6379/1"
     CELERY_RESULT_BACKEND = "redis://localhost:6379/2"
+    # CELERY_TIMEZONE = 'Asia/Kolkata'
 
     
 

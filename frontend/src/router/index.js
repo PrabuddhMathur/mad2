@@ -5,6 +5,7 @@ import SearchView from '../views/SearchView.vue'
 import AdminDashboardView from '../views/AdminDashboardView.vue'
 import ShowsView from '../views/ShowsView.vue'
 import UserBookingsView from '../views/UserBookingsView.vue'
+import AdminSummaryView from '../views/AdminSummaryView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,11 +36,12 @@ const router = createRouter({
     {
       path: '/bookings',
       name: 'bookings',
-      component: UserBookingsView,
+      component: UserBookingsView
     },
     {
       path: '/summary',
-      name: 'summary'
+      name: 'summary',
+      component: AdminSummaryView
     },
     {
       path: '/login',

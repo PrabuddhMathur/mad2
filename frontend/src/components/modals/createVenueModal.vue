@@ -7,36 +7,38 @@
           <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Venue</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-            <div class="row justify-content-center text-center">
-              <div class="row m-1">
-                  <h4>Creating a new venue.</h4>
-              </div>
-              <div class="row m-1">
-                  <label class="form-label col-4 align-self-center">Venue Name</label>
-                  <input class="col-5" type="text" name="venue" v-model.trim="venue_name" required>
-              </div>
-              <div class="row m-1">
-                  <label class="form-label col-4" for="">Place</label>
-                  <input class="col-5" type="text" name="place" v-model.trim="venue_place" required>
-              </div>
-              <div class="row m-1">
-                  <label class="form-label col-4" for="location">Location</label>
-                  <select class='col-5' name="location" id="location" v-model.trim="venue_location" required>
-                    <option value="" selected>-- Select Location --</option>
-                    <option v-for="location in locations" :key="location" :value=location>{{ location }}</option>
-                  </select>
-              </div>
-              <div class="row m-1">
-                  <label class="form-label col-4" for="">Capacity</label>
-                  <input class="col-5" min="0" type="number" name="capacity" v-model.trim="venue_capacity" required>
-              </div>
+        <form @submit.prevent="addVenue">
+          <div class="modal-body">
+              <div class="row justify-content-center text-center">
+                <div class="row m-1">
+                    <h4>Creating a new venue.</h4>
+                </div>
+                <div class="row m-1">
+                    <label class="form-label col-4 align-self-center">Venue Name</label>
+                    <input class="col-5" type="text" name="venue" v-model.trim="venue_name" required>
+                </div>
+                <div class="row m-1">
+                    <label class="form-label col-4" for="">Place</label>
+                    <input class="col-5" type="text" name="place" v-model.trim="venue_place" required>
+                </div>
+                <div class="row m-1">
+                    <label class="form-label col-4" for="location">Location</label>
+                    <select class='col-5' name="location" id="location" v-model.trim="venue_location" required>
+                      <option value="" selected>-- Select Location --</option>
+                      <option v-for="location in locations" :key="location" :value=location>{{ location }}</option>
+                    </select>
+                </div>
+                <div class="row m-1">
+                    <label class="form-label col-4" for="">Capacity</label>
+                    <input class="col-5" min="0" type="number" name="capacity" v-model.trim="venue_capacity" required>
+                </div>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-success" @click="addVenue">Add</button>
-        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Add</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

@@ -10,8 +10,7 @@
                 </div>
                 <div class="card-body">
                     <div class="container ">
-                        <div class="row align-items-center">
-                            
+                        <div v-if="venue.venue_show.length>0" class="row align-items-center">
                             <div v-for="show in venue.venue_show" :key="show" class="card m-2 col-3 p-0">
                                 <div class="card-header" style="background-color: #BBE38F">
                                     <h5 class="card-title m-1">{{ show.show_name }}</h5>
@@ -44,9 +43,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--Create Booking Modal-->
-                            
                         </div>
+                        <div v-else>No available shows</div>
                     </div>
                 </div>
             </div>

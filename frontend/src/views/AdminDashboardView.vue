@@ -38,7 +38,6 @@ export default {
 			},
 			async isAdmin(){
 				if (this.userSession){
-
 					axios.defaults.headers.common["Authorization"] = `Bearer ${this.userSession.token}`;
 
 				await axios
@@ -71,8 +70,8 @@ export default {
 		}
 	},
 	async beforeMount() {
-		this.fetchVenues();
 		this.isAdmin();
+		this.fetchVenues();
 	},
 	mounted() {
 		document.title = "Admin Dashboard";

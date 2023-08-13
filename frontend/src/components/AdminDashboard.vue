@@ -1,4 +1,3 @@
-
 <template>
     <div class="container-fluid">
 	<div class="card m-2">
@@ -28,44 +27,45 @@
 								<div class="container">
 									<div class="row justify-content-center">
 										<p class="col-12 card-text text-center h6">Available capacity: {{ venue.venue_capacity }}</p>
-										<p class="col-12 card-text text-center h6">Available Shows</p>
+										<p v-if="venue.venue_show.length > 0" class="col-12 card-text text-center h6">Available Shows</p>
+										<p style="color: red;" v-else class="col-12 card-text text-center h6"> No Available Shows</p>
 									</div>
 									<div class="row">
 									
-									<div  v-for="show in venue.venue_show" :key="show" class="card col-3 m-4 p-0">
-										<div class="card-header p-2" style="background-color: #BBE38F">
-											<div class="row justify-content-center">
-												<h6 class="col-6 card-title text-center m-0">{{ show["show_name"] }}</h6>
-											</div>
-										</div>
-										<div class="card-body">
-											<div class="row">
-												<div class="col-7 text-start">
-													<p class="card-text m-1">Timing :</p>
-													<p class="card-text m-1">Genre :</p>
-													<p class="card-text m-1">Rating :</p>
-													<p class="card-text m-1">Ticket Price :</p>
-													<p class="card-text m-1">Available Tickets :</p>
-												</div>
-												<div class="col-5 text-start">
-													<p class="card-text m-1">{{ show.show_timing }}</p>
-													<p class="card-text m-1">{{ show.show_tags }}</p>
-													<p class="card-text m-1">{{ show.show_rating }}</p>
-													<p class="card-text m-1">&#x20B9;{{ show.show_ticketprice }}</p>
-													<p class="card-text m-1">{{ show.available_tickets }}</p>
+										<div  v-for="show in venue.venue_show" :key="show" class="card col-3 m-4 p-0">
+											<div class="card-header p-2" style="background-color: #BBE38F">
+												<div class="row justify-content-center">
+													<h6 class="col-6 card-title text-center m-0">{{ show["show_name"] }}</h6>
 												</div>
 											</div>
-										</div>
-										<div class="card-footer">
-											<div class="row">
-												<button class="col-12 btn btn-success" data-bs-toggle="modal" :data-bs-target="'#' + show.show_id +'view_show'">Edit Details</button>
-												<editShowModal 
-												:shows=show
-												:venues=venue
-												/>
+											<div class="card-body">
+												<div class="row">
+													<div class="col-7 text-start">
+														<p class="card-text m-1">Timing :</p>
+														<p class="card-text m-1">Genre :</p>
+														<p class="card-text m-1">Rating :</p>
+														<p class="card-text m-1">Ticket Price :</p>
+														<p class="card-text m-1">Available Tickets :</p>
+													</div>
+													<div class="col-5 text-start">
+														<p class="card-text m-1">{{ show.show_timing }}</p>
+														<p class="card-text m-1">{{ show.show_tags }}</p>
+														<p class="card-text m-1">{{ show.show_rating }}</p>
+														<p class="card-text m-1">&#x20B9;{{ show.show_ticketprice }}</p>
+														<p class="card-text m-1">{{ show.available_tickets }}</p>
+													</div>
+												</div>
+											</div>
+											<div class="card-footer">
+												<div class="row">
+													<button class="col-12 btn btn-success" data-bs-toggle="modal" :data-bs-target="'#' + show.show_id +'view_show'">Edit Details</button>
+													<editShowModal 
+													:shows=show
+													:capacity=venue.venue_capacity
+													/>
+												</div>
 											</div>
 										</div>
-									</div>
 									
 									</div>
 								</div>
@@ -98,6 +98,7 @@ import axios from "axios";
     export default {
 		components: {createShowModal, createVenueModal, editVenueModal ,editShowModal},
         name: "adminDashboardComp",
+		
         props:{
             venues: {
                 type: Array,
@@ -116,7 +117,8 @@ import axios from "axios";
                     .then((response)=>response)
                     .then((response)=>console.log(response.data))
                     this.$router.go(0);
-            }
-        }
+            },
+			
     }
+}
 </script>

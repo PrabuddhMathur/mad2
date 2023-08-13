@@ -32,9 +32,9 @@
                             <button class="btn btn-success m-2" data-bs-toggle="modal" :data-bs-target="'#'+booking.booking_id+'edit_booking'">Edit Booking details</button>
                             <button class="btn btn-success m-2" data-bs-toggle="modal" :data-bs-target="'#'+booking.booking_id+'show_rating'">Rate Show</button>
                             <!-- Edit Bookings Modal -->
-                            <editBookingsModel :booking=booking />
+                            <editBookingsModel :booking="booking" />
                             <!--Rate Show Modal-->
-                            <rateShowModal :booking=booking />
+                            <rateShowModal :booking="booking" />
                         </div>
                     </div>
                 </div>

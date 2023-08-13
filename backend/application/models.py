@@ -17,6 +17,19 @@ class Shows(db.Model):
     show_tags=db.Column(db.String)
     show_ticketprice=db.Column(db.Integer)
 
+    def to_venue_dict(self):
+        available_tickets=ShowVenue.query.filter_by(show_id=self.show_id).first().available_tickets
+        
+        return {
+            "show_id":self.show_id,
+            "show_name":self.show_name,
+            "show_timing":self.show_timing,
+            "show_rating":self.show_rating,
+            "show_tags":self.show_tags,
+            "show_ticketprice":self.show_ticketprice,
+            "available_tickets":available_tickets,
+        }
+    
     def to_dict(self):
         this_venue=ShowVenue.query.filter_by(show_id=self.show_id).first()
         venue_details=Venues.query.filter_by(venue_id=this_venue.venue_id).first()
@@ -52,8 +65,8 @@ class Venues(db.Model):
         }
 
     def to_dict(self):
-        venue_show=[i.to_dict() for i in self.venue_show]
-        tickets = [i.to_dict()["available_tickets"] for j in [k.to_dict() for k in self.venue_show] for i in ShowVenue.query.filter_by(venue_id=self.venue_id, show_id=j["show_id"]).all()]
+        venue_show=[i.to_venue_dict() for i in self.venue_show]
+        tickets = [i.to_dict()["available_tickets"] for j in [k.to_venue_dict() for k in self.venue_show] for i in ShowVenue.query.filter_by(venue_id=self.venue_id, show_id=j["show_id"]).all()]
         v = []
         for i, show in enumerate(venue_show):
             show["available_tickets"] = tickets[i]
@@ -110,3 +123,7 @@ class Token(db.Model):
     __tablename__ = "token"
     user_id = db.Column(db.Integer, primary_key=True, nullable=False)
     token = db.Column(db.String, nullable=False, unique=True)
+
+class Visited(db.Model):
+    user_id=db.Column(db.Integer, primary_key=True, nullable=False)
+    status=db.Column(db.Boolean, nullable=False, default=False)
